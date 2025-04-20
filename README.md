@@ -1,46 +1,84 @@
-# MakeTray
+# **MakeTray**
 
-`MakeTray` is a lightweight utility designed to simplify the creation of system tray applications. It provides a streamlined interface for managing system tray icons and menus across platforms.
+**MakeTray** is a tiny macOS menu‑bar app that lets you launch any Makefile target with a single click—no terminal juggling, no remembering command names.
 
-## Features
+## **Key Features**
 
-- Run make commands directly from you Mac OS bar
 
-## Installation
 
-Clone the repository:
+| **What you get**      | **Details**                                                  |
+| --------------------- | ------------------------------------------------------------ |
+| **One‑click targets** | Every goal in your Makefile appears as its own menu item in the system bar. |
+| **Live re‑parsing**   | Edit the Makefile in iCloud (or any path you pass at launch) and the list refreshes instantly. |
+| **Terminal output**   | Each target opens a new Terminal window so you can watch logs in real time—then auto‑closes if you prefer. |
+| **Zero clutter**      | Runs as an LSUIElement, so there’s no Dock icon or task‑switcher entry—just the menu‑bar glyph. |
 
-```bash
+
+
+## **Installation**
+
+1. **Clone the repo**
+
+```
 git clone https://github.com/alexrett/make-tray.git
 cd make-tray
 ```
 
-Install dependencies:
+2. **Install Go modules**
 
-```bash
+```
 go mod tidy
 ```
 
-Build and install:
+3. **Build the app bundle**
 
-```bash
-make build
+```
+make build      # => MakeTray.app inside /Application
 ```
 
-Application will be installed into `/Application/MakeTray.app` 
 
-## Usage
+## **Quick Start**
 
-- Create in iCloud root folder `Makefile` (use `make createMake` command for initialize)
-- Run application MakeTray.app
-- Edit your Makefile stored in iCloud with your needs
-- Enjoy
+1. **Create a Makefile in your iCloud root**
+
+```
+make createMake   # helper target – drops a skeleton Makefile in iCloud
+```
+
+1. **Launch MakeTray**
+
+   *Double‑click* MakeTray.app (or run open /Applications/MakeTray.app).
+
+   The 🛠️ icon appears near the clock; click it to see your targets.
+
+2. **Edit your Makefile**
+
+   Add or tweak targets—MakeTray picks them up automatically.
 
 
-## Contributing
 
-Contributions are welcome! Please fork the repository and submit a pull request.
+## **Advanced Usage**
 
-## License
 
-This project is licensed under the [MIT License](LICENSE).
+
+| **Scenario**                   | **Command**                                        |
+| ------------------------------ | -------------------------------------------------- |
+| Use a custom Makefile location | MakeTray -makefile "$HOME/Projects/foo/Makefile"   |
+| Add an app‑icon of your own    | Replace icon.png and rebuild.                      |
+| Keep the Terminal window open  | Comment out the osascript “close” line in main.go. |
+
+
+
+## **Contributing**
+
+Pull requests are welcome!
+
+1. Fork → feature branch → PR.
+2. Follow go vet and golangci-lint checks.
+3. Add yourself to CONTRIBUTORS.md.
+
+
+
+## **License**
+
+Released under the [MIT License](LICENSE).
