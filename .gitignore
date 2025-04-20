@@ -2,3 +2,4 @@ cloudMakefile
 .vscode
 .DS_Store
 .idea
+MakeTray.app/Contents/MacOS/MakeTray
