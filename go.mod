@@ -1,4 +1,4 @@
-module systray-make
+module make-tray
 
 go 1.23.5
 

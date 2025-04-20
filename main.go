@@ -22,20 +22,22 @@ var iconData []byte
 var makefile string
 
 func main() {
-	flag.StringVar(&makefile, "makefile", "~/Library/Mobile Documents/com~apple~CloudDocs/Makefile", "путь к Makefile, из которого читаются цели")
+	flag.StringVar(&makefile, "makefile", "~/Library/Mobile Documents/com~apple~CloudDocs/Makefile", "makefile path")
 	flag.Parse()
 	makefile = expandPath(makefile)
 
 	if _, err := os.Stat(makefile); err != nil {
-		log.Fatalf("Makefile не найден: %v", err)
+		log.Fatalf("Makefile not found: %v", err)
 	}
 
 	systray.Run(onReady, nil)
 }
 
-// expandPath разворачивает '~', удаляет кавычки и убирает экранирование
+// expandPath normalizes path to absolute path
+// and replaces ~ with home directory
+// and removes quotes from the beginning and end of the path
 func expandPath(p string) string {
-	// удаляем внешние кавычки, если пользователь передал путь в "…" или '…'
+	// removing quotes from the beginning and end of the path
 	p = strings.Trim(p, "\"'")
 
 	if strings.HasPrefix(p, "~/") {
@@ -51,26 +53,26 @@ func expandPath(p string) string {
 }
 
 func replaceSpaces(s string) string {
-	// заменяем пробелы на %20, чтобы передать в osascript
+	// replacing spaces with \\\\ in the path
+	// because osascript doesn't like spaces in the path
+	// and we need to escape them
 	s = strings.ReplaceAll(s, " ", "\\\\ ")
 	return s
 }
 
 func onReady() {
 	systray.SetTitle("")
-	systray.SetTooltip("Меню целей Make")
+	systray.SetTooltip("MakeTray")
 	systray.SetIcon(iconData)
 
 	targets, err := parseMakefile(makefile)
 	if err != nil {
-		log.Printf("Ошибка парсинга Makefile: %v", err)
+		log.Printf("Makefile parsing error: %v", err)
 	}
 
-	// создаём пункт меню на каждую цель и вешаем обработчик клика
 	for _, t := range targets {
 		item := systray.AddMenuItem(t, fmt.Sprintf("make %s", t))
 
-		// обработчик в отдельной горутине, чтобы не блокировать главный поток macOS
 		go func(target string, mi *systray.MenuItem) {
 			for range mi.ClickedCh {
 				go runTarget(target)
@@ -79,14 +81,14 @@ func onReady() {
 	}
 
 	systray.AddSeparator()
-	quit := systray.AddMenuItem("Выход", "Закрыть приложение")
+	quit := systray.AddMenuItem("Exit", "Close the app")
 	go func() {
 		<-quit.ClickedCh
 		systray.Quit()
 	}()
 }
 
-// runTarget открывает Terminal и запускает make <target> в каталоге Makefile
+// runTarget opens a new terminal window and runs the target
 func runTarget(target string) {
 	abs, _ := filepath.Abs(makefile)
 	dir := replaceSpaces(filepath.Dir(abs))
@@ -101,7 +103,7 @@ func runTarget(target string) {
 	}
 }
 
-// parseMakefile вытаскивает простые цели вида "target:" без зависимостей
+// parseMakefile parses the Makefile and returns a list of targets
 func parseMakefile(path string) ([]string, error) {
 	f, err := os.Open(path)
 	if err != nil {
