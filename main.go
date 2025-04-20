@@ -111,7 +111,7 @@ func parseMakefile(path string) ([]string, error) {
 	}
 	defer f.Close()
 
-	re := regexp.MustCompile(`^([A-Za-z0-9_\-\.]+):`) // имя до ':'
+	re := regexp.MustCompile(`^([A-Za-z0-9_\-\.]+):`) // name before ':'
 	targets := make(map[string]struct{})
 
 	s := bufio.NewScanner(f)
