@@ -29,11 +29,19 @@ cd make-tray
 go mod tidy
 ```
 
-3. **Build the app bundle**
+3. **Run the app bundle**
 
 ```bash
-make build      # => dist/MakeTray.app  (universal binary)
+make run
 ```
+
+4. **Build the app bundle**
+
+```bash
+make build
+```
+
+It will build and copy MakeTray.app into your `/Application` folder.
 
 ### Pre‑built releases
 
@@ -63,15 +71,14 @@ Grab the latest `.dmg` or `.zip` from the [Releases](https://github.com/alexrett
   }
   ```
 
-You can edit this file manually or use **Manage Makefiles ▸ Add…** from the menu.
+You can edit this file manually or use **Settings ▸ Add…** from the menu.
 
 ## **Advanced Usage**
 
 | **Scenario**                              | **Command / Setting**                                         |
 | ----------------------------------------- | ------------------------------------------------------------- |
 | Custom config path                        | `MakeTray -config /path/to/my.json`                           |
-| Open config in VS Code                    | *Manage Makefiles ▸ Open config…*                             |
-| Manual menu reload                        | *Manage Makefiles ▸ Reload now*                               |
+| Open config in VS Code                    | *Settings ▸ Open config…*                             |
 | Keep Terminal window open                 | Comment out the `osascript` *close‑window* line in `main.go`. |
 | Replace app icon                          | Put new **icon.png** (menu glyph) + regenerate **icon.icns**. |
 
