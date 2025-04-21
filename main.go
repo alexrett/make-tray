@@ -192,7 +192,7 @@ func addMakefileGroup(entry Entry) {
 		label = filepath.Base(filepath.Dir(mf))
 	}
 
-	group := systray.AddMenuItem(label, mf)
+	group := systray.AddMenuItem(label, "")
 	groupMenus = append(groupMenus, group)
 
 	targets, err := parseMakefileTargets(mf)
@@ -209,7 +209,7 @@ func addMakefileGroup(entry Entry) {
 	}
 
 	for _, t := range targets {
-		item := group.AddSubMenuItem(t, fmt.Sprintf("make -f %s %s", label, t))
+		item := group.AddSubMenuItem(t, "")
 		go func(target string, mi *systray.MenuItem) {
 			for range mi.ClickedCh {
 				go runTarget(mf, target)
