@@ -10,7 +10,7 @@
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | **One‑click targets**         | Every Makefile target appears as its own menu item—grouped by Makefile and shown with your custom label.          |
 | **Live auto‑reload**          | Any change to `config.json` **or** to the Makefiles is detected instantly – menus refresh without relaunching.    |
-| **Config GUI**                | “Manage Makefiles” submenu lets you add files via **Choose File** dialog, rename labels, or trigger a manual reload. |
+| **Config GUI**                | “Settings” submenu lets you add files via **Choose File** dialog or open config for manual editing. |
 | **Terminal output**           | Each target opens a new Terminal window so you can watch logs in real time—window auto‑closes if you want.        |
 | **Zero clutter**              | Runs as an *LSUIElement*: no Dock icon, no Cmd‑Tab entry—just a tidy glyph in the menu bar.                        |
 
