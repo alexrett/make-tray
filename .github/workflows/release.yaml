@@ -40,6 +40,7 @@ jobs:
     - name: Package .app
       run: |
         mkdir -p dist/MakeTray.app/Contents/MacOS
+        mkdir -p dist/MakeTray.app/Contents/Resources
         cp build/MakeTray_universal dist/MakeTray.app/Contents/MacOS/MakeTray
         # copy icon.icns & Info.plist if they live in repo
         cp MakeTray.app/Contents/Resources/icon.icns dist/MakeTray.app/Contents/Resources/ || true
