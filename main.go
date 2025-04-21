@@ -172,7 +172,6 @@ func buildManagementMenu() {
 					}
 					_ = exec.Command("osascript", "-e",
 						`display notification "Makefile added – menu refreshed." with title "MakeTray"`).Run()
-					refreshMenus()
 				}()
 			case <-openCfg.ClickedCh:
 				go exec.Command("open", "-t", expandPath(configPath)).Run()
@@ -324,6 +323,7 @@ func startWatch(paths []string) {
 					return
 				}
 				if needStop {
+					w.Close()
 					break // stop watching
 				}
 			case err := <-w.Errors:
