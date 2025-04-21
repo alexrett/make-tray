@@ -252,11 +252,16 @@ func refreshMenus() {
 	startWatch(watchPaths)
 }
 
+func replaceSpaces(s string) string {
+	s = strings.ReplaceAll(s, " ", "\\\\ ")
+	return s
+}
+
 // runTarget opens Terminal and runs the selected target using the
 // specified Makefile.
 func runTarget(makefile, target string) {
 	abs, _ := filepath.Abs(makefile)
-	dir := filepath.Dir(abs)
+	dir := replaceSpaces(filepath.Dir(abs))
 
 	script := fmt.Sprintf(`tell application "Terminal"
         activate
