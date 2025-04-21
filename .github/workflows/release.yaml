@@ -1,0 +1,75 @@
+name: build‑and‑release
+
+on:
+  push:
+    branches: [ main ]
+    tags:     [ 'v*' ]          # build & publish when you push a tag like v1.2.0
+
+jobs:
+  build:
+    runs-on: macos-13           # Apple Silicon runner w/ Rosetta → can build both archs
+    timeout-minutes: 30
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+
+    # ---------- build per‑arch ----------
+    - name: Build arm64
+      run: |
+        GOOS=darwin GOARCH=arm64 CGO_ENABLED=1 \
+          go build -ldflags="-s -w" -o build/MakeTray_arm64 main.go
+
+    - name: Build amd64
+      run: |
+        GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 \
+          go build -ldflags="-s -w" -o build/MakeTray_amd64 main.go
+
+    # ---------- create universal binary ----------
+    - name: Lipo universal
+      run: |
+        lipo -create -output build/MakeTray_universal \
+             build/MakeTray_arm64 build/MakeTray_amd64
+
+    # ---------- wrap *.app & zip ----------
+    - name: Package .app
+      run: |
+        mkdir -p dist/MakeTray.app/Contents/MacOS
+        cp build/MakeTray_universal dist/MakeTray.app/Contents/MacOS/MakeTray
+        # copy icon.icns & Info.plist if they live in repo
+        cp MakeTray.app/Contents/Resources/icon.icns dist/MakeTray.app/Contents/Resources/ || true
+        cp MakeTray.app/Contents/Info.plist dist/MakeTray.app/Contents/   || true
+        codesign --force --deep --sign - dist/MakeTray.app
+        ditto -c -k --sequesterRsrc --keepParent dist/MakeTray.app MakeTray.app.zip
+      working-directory: ${{ github.workspace }}
+
+    # ---------- (optional) notarize & staple ----------
+    # You can insert apple-actions/auth@v1 + apple-actions/notarize-staple@v1
+    # with your Developer ID cert & API keys here.
+
+    # ---------- create release if this is a tag ----------
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: MakeTray-binaries
+        path: |
+          build/MakeTray_arm64
+          build/MakeTray_amd64
+          build/MakeTray_universal
+          MakeTray.app.zip
+
+    - name: Create GitHub Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v2
+      with:
+        draft: false
+        files: |
+          build/MakeTray_arm64
+          build/MakeTray_amd64
+          build/MakeTray_universal
+          MakeTray.app.zip
