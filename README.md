@@ -16,6 +16,20 @@
 
 ## **Installation**
 
+Via homebrew
+
+```
+brew tap alexrett/make-tray
+brew install make-tray
+```
+
+```
+% whereis make-tray
+> make-tray: /opt/homebrew/bin/make-tray
+```
+
+Manual
+
 1. **Clone the repo**
 
 ```
