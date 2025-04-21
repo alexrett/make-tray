@@ -19,8 +19,11 @@ import (
 	_ "embed"
 )
 
-//go:embed icon.png
-var iconData []byte
+//go:embed icon_dark.png
+var iconLight []byte
+
+//go:embed icon_light.png
+var iconDark []byte
 
 // default config lives in ~/Library/Application Support/MakeTray/config.json
 var (
@@ -132,8 +135,8 @@ func loadConfig(path string) error {
 func onReady() {
 	systray.SetTitle("")
 	systray.SetTooltip("MakeTray")
-	systray.SetIcon(iconData)
 
+	systray.SetTemplateIcon(iconLight, iconDark)
 	for _, entry := range config.Makefiles {
 		addMakefileGroup(entry)
 	}
