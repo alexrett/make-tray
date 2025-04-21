@@ -2,6 +2,8 @@
 
 **MakeTray** is a tiny macOS menu‑bar app that lets you launch any Makefile target with a single click—no terminal juggling, no remembering command names.
 
+![MakeTray](.doc/image.png)
+
 ## **Key Features**
 
 | **What you get**              | **Details**                                                                                                      |
